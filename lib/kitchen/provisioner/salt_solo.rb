@@ -136,7 +136,7 @@ module Kitchen
         chef_url = config[:chef_bootstrap_url]
         if windows_os?
           <<-POWERSHELL
-            if (-Not $(test-path c:\\opscode\\chef) {
+            if (-Not $(test-path c:\\opscode\\chef)) {
               if (-Not $(Test-Path c:\\temp)) {
                 New-Item -Path c:\\temp -itemtype directory
               }
