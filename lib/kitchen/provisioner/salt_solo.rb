@@ -234,7 +234,7 @@ module Kitchen
           cmd << "(get-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')}) -replace '\\$env:TEMP', $env:TEMP | set-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')} ;"
           # TODO: This is to hackey, maybe we can get the config dir to be kitchen\conf earlier on someplace.
           cmd << "mkdir #{File.join(config[:root_path], 'conf')} ;"
-          cmd << "copy #{File.join(config[:root_path], salt_config_path)}\\* #{File.join(config[:root_path], 'conf')}\\ ;"
+          cmd << "copy #{File.join(config[:root_path], salt_config_path).tr('/', '\\')}\\* #{File.join(config[:root_path], 'conf').tr('/', '\\')}\\ ;"
         else
           # install/update dependencies
           cmd << sudo("chmod +x #{config[:root_path]}/*.sh;")
