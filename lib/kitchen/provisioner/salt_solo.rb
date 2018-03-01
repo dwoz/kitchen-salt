@@ -140,6 +140,7 @@ module Kitchen
               if (-Not $(Test-Path c:\\temp)) {
                 New-Item -Path c:\\temp -itemtype directory
               }
+              [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
               (New-Object net.webclient).DownloadFile("#{chef_url}", "c:\\temp\\chef_bootstrap.ps1")
               write-host "-----> Installing Chef Omnibus (for busser/serverspec ruby support)"
               #{sudo('powershell')} c:\\temp\\chef_bootstrap.ps1
