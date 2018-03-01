@@ -233,15 +233,14 @@ module Kitchen
           salt_config_path = config[:salt_config].tr('/', '\\')
           #\etc\salt
           cmd << "(get-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')}) -replace '\\$env:TEMP', $env:TEMP | set-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')} ;"
-          cmd << sudo("#{salt_call} --state-output=changes --config-dir=#{File.join(config[:root_path], 'conf')} --local state.highstate")
         else
           # install/update dependencies
           cmd << sudo("chmod +x #{config[:root_path]}/*.sh;")
           cmd << sudo("#{config[:root_path]}/dependencies.sh;")
           salt_config_path = config[:salt_config]
           salt_call = 'salt-call'
-          cmd << sudo("#{salt_call} --state-output=changes --config-dir=#{File.join(config[:root_path], salt_config_path)} --local state.highstate")
         end
+        cmd << sudo("#{salt_call} --state-output=changes --config-dir=#{File.join(config[:root_path], salt_config_path)} --local state.highstate")
         cmd << " --log-level=#{config[:log_level]}" if config[:log_level]
         cmd << " --id=#{config[:salt_minion_id]}" if config[:salt_minion_id]
         cmd << " test=#{config[:dry_run]}" if config[:dry_run]
