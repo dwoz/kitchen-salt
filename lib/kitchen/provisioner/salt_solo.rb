@@ -141,7 +141,7 @@ module Kitchen
                 New-Item -Path c:\\temp -itemtype directory
               }
               [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-              (New-Object net.webclient).DownloadFile("#{chef_url}", "c:\\temp\\chef_bootstrap.ps1")
+              (New-Object net.webclient).DownloadFile("https://omnitruck.chef.io/install.ps1", "c:\\temp\\chef_bootstrap.ps1")
               write-host "-----> Installing Chef Omnibus (for busser/serverspec ruby support)"
               #{sudo('powershell')} c:\\temp\\chef_bootstrap.ps1
             }
