@@ -235,7 +235,7 @@ module Kitchen
           # TODO: This is to hackey, maybe we can get the config dir to be kitchen\conf earlier on someplace.
           cmd << "mkdir #{File.join(config[:root_path], 'conf').tr('/', '\\')} ;"
           cmd << "copy #{File.join(config[:root_path], salt_config_path).tr('/', '\\')}\\* #{File.join(config[:root_path], 'conf').tr('/', '\\')}\\ ;"
-          cmd << "$env:PATH=\"C:\\salt\\bin;$evn:PATH\" ;"
+          cmd << "$env:PATH=\"C:\\salt\\bin;$env:PATH\" ;"
         else
           # install/update dependencies
           cmd << sudo("chmod +x #{config[:root_path]}/*.sh;")
