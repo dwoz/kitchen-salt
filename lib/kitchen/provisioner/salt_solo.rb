@@ -236,7 +236,6 @@ module Kitchen
           cmd << "mkdir #{File.join(config[:root_path], 'conf').tr('/', '\\')} ;"
           cmd << "copy #{File.join(config[:root_path], salt_config_path).tr('/', '\\')}\\* #{File.join(config[:root_path], 'conf').tr('/', '\\')}\\ ;"
           cmd << "$env:PATH=\"C:\\salt\\bin;$env:PATH\" ;"
-          cmd << "$env:PYTHONPATH=\"C:\\salt\\bin" ;"
         else
           # install/update dependencies
           cmd << sudo("chmod +x #{config[:root_path]}/*.sh;")
