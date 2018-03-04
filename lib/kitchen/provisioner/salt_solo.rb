@@ -252,6 +252,7 @@ module Kitchen
           cmd << ' --retcode-passthrough'
         end
         cmd << ' 2>&1 ; exit $LASTEXITCODE' if windows_os?
+        info("Salt Command #{cmd}")
         cmd
       end
 
