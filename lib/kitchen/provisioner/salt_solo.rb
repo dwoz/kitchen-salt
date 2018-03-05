@@ -231,7 +231,7 @@ module Kitchen
           salt_call = "c:\\salt\\salt-call.bat"
           salt_config_path = config[:salt_config].tr('/', '\\')
           cmd << "(get-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')}) -replace '\\$env:TEMP', $env:TEMP | set-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')} ;"
-          cmd << "mkdir #{File.join(config[:root_path], 'conf').tr('/', '\\')} ;"
+          cmd << "mkdir -F #{File.join(config[:root_path], 'conf').tr('/', '\\')} ;"
           cmd << "copy #{File.join(config[:root_path], salt_config_path).tr('/', '\\')}\\* #{File.join(config[:root_path], 'conf').tr('/', '\\')}\\ ;"
           cmd << sudo("#{salt_call} --state-output=changes --config-dir=#{File.join(config[:root_path], salt_config_path).tr('/', '\\')} --local state.highstate")
         else
