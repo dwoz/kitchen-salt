@@ -400,9 +400,11 @@ module Kitchen
         %w[formula-fetch.sh repository-setup.sh].each do |script|
           write_raw_file(File.join(sandbox_path, script), File.read(File.expand_path("../#{script}", __FILE__)))
         end
-        dependencies_script = File.expand_path('./../dependencies.erb', __FILE__)
-        dependencies_content = ERB.new(File.read(dependencies_script)).result(binding)
-        write_raw_file(File.join(sandbox_path, 'dependencies.sh'), dependencies_content)
+        unless windows_os?
+          dependencies_script = File.expand_path('./../dependencies.erb', __FILE__)
+          dependencies_content = ERB.new(File.read(dependencies_script)).result(binding)
+          write_raw_file(File.join(sandbox_path, 'dependencies.sh'), dependencies_content)
+        end
       end
     end
   end
