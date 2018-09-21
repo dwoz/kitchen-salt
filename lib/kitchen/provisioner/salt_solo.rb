@@ -249,8 +249,39 @@ module Kitchen
            File.join(*args)
         end
       end
-
       def salt_command
+        salt_version = config[:salt_version]
+
+        cmd = ''
+        if windows_os?
+          salt_call = "c:\\salt\\salt-call.bat"
+          salt_config_path = config[:salt_config].tr('/', '\\')
+          cmd << "(get-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')}) -replace '\\$env:TEMP', $env:TEMP | set-content #{File.join(config[:root_path], salt_config_path, 'minion').tr('/', '\\')} ;"
+          cmd << "mkdir -F #{File.join(config[:root_path], 'conf').tr('/', '\\')} ;"
+          cmd << "copy #{File.join(config[:root_path], salt_config_path).tr('/', '\\')}\\* #{File.join(config[:root_path], 'conf').tr('/', '\\')}\\ ;"
+          cmd << sudo("#{salt_call} --state-output=changes --config-dir=#{File.join(config[:root_path], salt_config_path).tr('/', '\\')} --local state.highstate")
+        else
+          # install/update dependencies
+          cmd << sudo("chmod +x #{config[:root_path]}/*.sh;")
+          cmd << sudo("#{config[:root_path]}/dependencies.sh;")
+          salt_config_path = config[:salt_config]
+          salt_call = 'salt-call'
+          cmd << sudo("#{salt_call} --state-output=changes --config-dir=#{File.join(config[:root_path], salt_config_path)} --local state.highstate")
+        end
+        cmd << " --log-level=#{config[:log_level]}" if config[:log_level]
+        cmd << " --id=#{config[:salt_minion_id]}" if config[:salt_minion_id]
+        cmd << " test=#{config[:dry_run]}" if config[:dry_run]
+        cmd << ' --force-color' if config[:salt_force_color]
+        if salt_version > RETCODE_VERSION || salt_version == 'latest'
+          # hope for the best and hope it works eventually
+          cmd << ' --retcode-passthrough'
+        end
+        cmd << ' 2>&1 ; exit $LASTEXITCODE' if windows_os?
+        info("salt command: #{cmd}")
+        cmd
+      end
+
+      def xsalt_command
         salt_version = config[:salt_version]
 
         cmd = ''
