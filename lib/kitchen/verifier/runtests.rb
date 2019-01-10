@@ -32,7 +32,7 @@ module Kitchen
         if config[:enable_filenames] and ENV['CHANGE_TARGET'] and ENV['BRANCH_NAME']
           require 'git'
           repo = Git.open('.')
-	  config[:from_filenames] = repo.diff("origin/#{ENV['CHANGE_TARGET']}", "origin/#{ENV['BRANCH_NAME']}").name_status.keys.select{|file| file.end_with?('.py')}
+          config[:from_filenames] = repo.diff("origin/#{ENV['CHANGE_TARGET']}", "origin/#{ENV['BRANCH_NAME']}").name_status.keys.select{|file| file.end_with?('.py')}
         end
         command = [
           (config[:windows] ? 'python.exe' : config[:python_bin]),
@@ -47,7 +47,7 @@ module Kitchen
           (config[:xml] ? "--xml=#{config[:xml]}" : ''),
           config[:types].collect{|type| "--#{type}"}.join(' '),
           config[:tests].collect{|test| "-n #{test}"}.join(' '),
-	  (config[:from_filenames].any? ? "--from-filenames=#{config[:from_filenames].join(',')}" : ''),
+          (config[:from_filenames].any? ? "--from-filenames=#{config[:from_filenames].join(',')}" : ''),
           '2>&1',
         ].join(' ')
         if config[:windows]
@@ -66,7 +66,11 @@ module Kitchen
           ensure
             config[:save].each do |remote, local|
               unless config[:windows]
-                conn.execute(sudo("chmod -R +r #{remote}"))
+                begin
+                  conn.execute(sudo("chmod -R +r #{remote}"))
+                rescue Kitchen::ActionFailed => msg
+                  error("Chmod file failed: #{msg}")
+                end
               end
               info("Copying #{remote} to #{local}")
               conn.download(remote, local)
