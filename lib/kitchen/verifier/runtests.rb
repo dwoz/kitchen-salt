@@ -69,7 +69,7 @@ module Kitchen
                 begin
                   conn.execute(sudo("chmod -R +r #{remote}"))
                 rescue Kitchen::ActionFailed => msg
-                  error("Chmod file failed: #{msg}")
+                  info("Chmod file failed: #{msg}")
                 end
               end
               info("Copying #{remote} to #{local}")
